@@ -4,11 +4,11 @@ set idfile /var/lib/monit/id
 set statefile /var/lib/monit/state
 set mailserver localhost
 
-  set eventqueue
-      basedir /var/lib/monit/events
-      slots 100
+set eventqueue
+ basedir /var/lib/monit/events
+ slots 100
 
- set mail-format {
+set mail-format {
       from: monit@$HOST
    subject: monit alert --  $EVENT $SERVICE
    message: $EVENT Service $SERVICE
@@ -26,18 +26,22 @@ set alert XXXXXXXXXXXXXXXX@XXXXXXXXXXXXXXXX.com not on { instance, action }
 set httpd port 2812 and
 allow XXXXXXXXXXXXXXXX:XXXXXXXXXXXXXXXX
 allow xxxxxxxxxxxxxxxx:xxxxxxxxxxxxxxxx readonly
-     with ssl {
-     pemfile: /etc/monit/monit.pem
-     }
+ with ssl {
+ pemfile: /etc/monit/monit.pem
+ }
+
+###############################################################################
+## Services
+###############################################################################
 
 check system $HOST
-    if loadavg (1min) > 4 then alert
-    if loadavg (5min) > 3 then alert
-    if memory usage > 75% then alert
-    if swap usage > 25% then alert
-    if cpu usage (user) > 85% then alert
-    if cpu usage (system) > 30% then alert
-    if cpu usage (wait) > 20% then alert
+ if loadavg (1min) > 4 then alert
+ if loadavg (5min) > 3 then alert
+ if memory usage > 75% then alert
+ if swap usage > 25% then alert
+ if cpu usage (user) > 85% then alert
+ if cpu usage (system) > 30% then alert
+ if cpu usage (wait) > 20% then alert
 
 ## -----------------------------------------------
 
