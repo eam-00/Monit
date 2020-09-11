@@ -161,6 +161,46 @@ check file postfix_rc with path /etc/init.d/postfix
 
 ## -----------------------------------------------
 
+check process nginx with pidfile /var/run/nginx.pid
+
+ group www
+ group server
+
+ start program = "/etc/init.d/nginx start"
+ stop program  = "/etc/init.d/nginx stop"
+
+ if cpu is greater than 60% for 2 cycles then alert
+ if cpu > 80% for 5 cycles then restart
+ if totalmem > 500 MB for 5 cycles then restart
+ if children > 250 then restart
+ if loadavg(5min) greater than 10 for 8 cycles then restart
+
+ if failed (url https://xxxxxxxx.xxxxxxxx.org and timeout 30 seconds) then alert
+ if 3 restarts within 5 cycles then timeout
+
+ depend on nginx_bin
+ depend on nginx_rc
+# depend on nginx_rc_prod
+ depend on nginx_rc_staging
+
+check file nginx_bin with path /usr/sbin/nginx
+ group www
+ group server
+
+check file nginx_rc with path /etc/nginx/nginx.conf
+ group www
+ group server
+
+#check file nginx_rc_prod with path /etc/nginx/sites-enabled/production
+# group www
+# group server
+
+check file nginx_rc_staging with path /etc/nginx/sites-enabled/staging
+ group www
+ group server
+
+## -----------------------------------------------
+
 check program check-disk-usage.sh with path /usr/local/etc/scripts/utils/check-disk-usage.sh
 if status != 0 then alert
 
