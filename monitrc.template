@@ -235,6 +235,14 @@ check process elasticsearch with pidfile /var/run/elasticsearch/elasticsearch.pi
 
 ## -----------------------------------------------
 
+## Puma Staging
+check process puma_staging_FQDN
+ with pidfile "/home/$USER/staging/shared/tmp/pids/puma.pid"
+ start program = "/usr/bin/sudo -iu $USER /bin/bash -c 'cd /home/$USER/staging/current && ~/.rvm/bin/rvm default do bundle exec puma -C /home/$USER/staging/shared/puma.rb --daemon'"
+ stop program = "/usr/bin/sudo -iu $USER /bin/bash -c 'cd /home/$USER/staging/current && ~/.rvm/bin/rvm default do bundle exec pumactl -S /home/$USER/staging/shared/tmp/pids/puma.state stop'"
+
+## -----------------------------------------------
+
 check program check-disk-usage.sh with path /usr/local/etc/scripts/utils/check-disk-usage.sh
 if status != 0 then alert
 
