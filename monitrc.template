@@ -201,6 +201,29 @@ check file nginx_rc_staging with path /etc/nginx/sites-enabled/staging
 
 ## -----------------------------------------------
 
+check process mysqld with pidfile /var/run/mysqld/mysqld.pid
+
+ group server
+ group database
+
+ start program = "/etc/init.d/mysql start" with timeout 60 seconds
+ stop program  = "/etc/init.d/mysql stop"
+
+ if failed unixsocket /var/run/mysqld/mysqld.sock then restart
+ if failed host 127.0.0.1 port 3306 then restart
+ if 5 restarts within 5 cycles then timeout
+
+ depend on mysqld_bin
+ depend on mysqld_rc
+
+check file mysqld_bin with path /usr/sbin/mysqld
+ group database
+
+check file mysqld_rc with path /etc/mysql/mysql.conf.d/mysqld.cnf
+ group database
+
+## -----------------------------------------------
+
 check program check-disk-usage.sh with path /usr/local/etc/scripts/utils/check-disk-usage.sh
 if status != 0 then alert
 
