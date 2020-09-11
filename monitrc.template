@@ -241,6 +241,14 @@ check process puma_staging_FQDN
 
 ## -----------------------------------------------
 
+## Puma Production
+check process puma_prod_QDN
+ with pidfile "/home/$USER/production/shared/tmp/pids/puma.pid"
+ start program = "/usr/bin/sudo -iu $USER /bin/bash -c 'cd /home/$USER/production/current && ~/.rvm/bin/rvm default do bundle exec puma -C /home/$USER/production/shared/puma.rb --daemon'"
+ stop program = "/usr/bin/sudo -iu $USER /bin/bash -c 'cd /home/$USER/production/current && ~/.rvm/bin/rvm default do bundle exec pumactl -S /home/$USER/production/shared/tmp/pids/puma.state stop'"
+
+## -----------------------------------------------
+
 check program check-disk-usage.sh with path /usr/local/etc/scripts/utils/check-disk-usage.sh
 if status != 0 then alert
 
