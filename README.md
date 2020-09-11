@@ -1,2 +1,2 @@
 # Monit
-A simple template for the Monit configuration file.
+A simple configuration file template for [Monit](https://mmonit.com/monit/).
