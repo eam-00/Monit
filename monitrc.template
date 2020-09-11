@@ -30,9 +30,7 @@ allow xxxxxxxxxxxxxxxx:xxxxxxxxxxxxxxxx readonly
  pemfile: /etc/monit/monit.pem
  }
 
-###############################################################################
-## Services
-###############################################################################
+## -----------------------------------------------
 
 check system $HOST
  if loadavg (1min) > 4 then alert
