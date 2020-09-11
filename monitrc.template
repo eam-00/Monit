@@ -73,12 +73,15 @@ check directory cron_spool with path /var/spool/cron/crontabs
 ## -----------------------------------------------
 
  check process sshd with pidfile /var/run/sshd.pid
-   group system
-   group sshd
-   start program = "/etc/init.d/ssh start"
-   stop  program = "/etc/init.d/ssh stop"
-   if failed host localhost port 22 with proto ssh then restart
-   if 5 restarts with 5 cycles then timeout
+ 
+  group system
+  group sshd
+  
+  start program = "/etc/init.d/ssh start"
+  stop  program = "/etc/init.d/ssh stop"
+  if failed host localhost port 22 with proto ssh then restart
+  if 5 restarts with 5 cycles then timeout
+  
    depend on sshd_bin
    depend on sftp_bin
    depend on sshd_rc
