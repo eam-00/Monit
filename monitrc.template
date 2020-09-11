@@ -1,0 +1,113 @@
+set daemon 120
+set logfile /var/log/monit.log
+set idfile /var/lib/monit/id
+set statefile /var/lib/monit/state
+set mailserver localhost
+
+  set eventqueue
+      basedir /var/lib/monit/events
+      slots 100
+
+ set mail-format {
+      from: monit@$HOST
+   subject: monit alert --  $EVENT $SERVICE
+   message: $EVENT Service $SERVICE
+                 Date:        $DATE
+                 Action:      $ACTION
+                 Host:        $HOST
+                 Description: $DESCRIPTION
+
+            Your faithful employee,
+            Monit
+ }
+
+set alert XXXXXXXXXXXXXXXX@XXXXXXXXXXXXXXXX.com not on { instance, action }
+
+set httpd port 2812 and
+allow XXXXXXXXXXXXXXXX:XXXXXXXXXXXXXXXX
+allow xxxxxxxxxxxxxxxx:xxxxxxxxxxxxxxxx readonly
+     with ssl {
+     pemfile: /etc/monit/monit.pem
+     }
+
+check system $HOST
+    if loadavg (1min) > 4 then alert
+    if loadavg (5min) > 3 then alert
+    if memory usage > 75% then alert
+    if swap usage > 25% then alert
+    if cpu usage (user) > 85% then alert
+    if cpu usage (system) > 30% then alert
+    if cpu usage (wait) > 20% then alert
+
+## -----------------------------------------------
+
+check process Crond with pidfile /var/run/crond.pid
+ group server
+ group crond
+
+ start program = "/etc/init.d/cron start"
+ stop  program = "/etc/init.d/cron stop"
+ if 5 restarts within 5 cycles then timeout
+
+ depend on crond_bin
+ depend on crond_rc
+
+ check file crond_bin with path /usr/sbin/cron
+  group server
+  group crond
+
+ check file crond_rc with path "/etc/init.d/cron"
+  group server
+  group crond
+
+check directory cron_spool with path /var/spool/cron/crontabs
+  group server
+  group crond
+
+ if failed permission 1730 then unmonitor
+ if failed uid root        then unmonitor
+ if failed gid crontab     then unmonitor
+
+## -----------------------------------------------
+
+ check process sshd with pidfile /var/run/sshd.pid
+   group system
+   group sshd
+   start program = "/etc/init.d/ssh start"
+   stop  program = "/etc/init.d/ssh stop"
+   if failed host localhost port 22 with proto ssh then restart
+   if 5 restarts with 5 cycles then timeout
+   depend on sshd_bin
+   depend on sftp_bin
+   depend on sshd_rc
+   depend on sshd_rsa_key
+   depend on sshd_dsa_key
+
+ check file sshd_bin with path /usr/sbin/sshd
+   group sshd
+   include /etc/monit/templates/rootbin
+
+ check file sftp_bin with path /usr/lib/openssh/sftp-server
+   group sshd
+   include /etc/monit/templates/rootbin
+
+ check file sshd_rsa_key with path /etc/ssh/ssh_host_rsa_key
+   group sshd
+   include /etc/monit/templates/rootstrict
+
+ check file sshd_dsa_key with path /etc/ssh/ssh_host_dsa_key
+   group sshd
+   include /etc/monit/templates/rootstrict
+
+ check file sshd_rc with path /etc/ssh/sshd_config
+   group sshd
+   include /etc/monit/templates/rootrc
+
+## -----------------------------------------------
+
+check program check-disk-usage.sh with path /usr/local/etc/scripts/utils/check-disk-usage.sh
+if status != 0 then alert
+
+## -----------------------------------------------
+
+## EoF ##
