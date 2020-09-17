@@ -253,11 +253,19 @@ if status != 0 then alert
 ## -----------------------------------------------
 
 ## Alternative to HDD check
-
 check filesystem rootfs with path /
  if space usage > 80% for 5 times within 15 cycles then alert
  if space usage > 99% then stop
  if inode usage > 690000 then alert
+ if inode usage > 99% then stop
+
+## -----------------------------------------------
+
+## Another alternative to HDD check
+check filesystem Root_FS with path /
+ if space usage > 80% for 5 times within 15 cycles then alert
+ if space usage > 99% then stop
+ if inode usage > 4777750 then alert
  if inode usage > 99% then stop
 
 ## -----------------------------------------------
