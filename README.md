@@ -1,4 +1,4 @@
 # Monit
 A simple configuration file template for [Monit](https://mmonit.com/monit/).  
-It lists all of the services on the template file so it only needs to trim the services you don't need.
+It contains all of the services on the template file so you only need to trim the services you don't need out of it.
  
