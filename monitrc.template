@@ -247,7 +247,7 @@ check process puma_prod_QDN
 
 ## -----------------------------------------------
 
-## See: [check-disk-usage.sh](https://github.com/eam-00/Util-scripts/blob/master/check-disk-usage.sh)
+## See: check-disk-usage.sh - https://github.com/eam-00/Util-scripts/blob/master/check-disk-usage.sh
 check program check-disk-usage.sh with path /usr/local/etc/scripts/utils/check-disk-usage.sh
 if status != 0 then alert
 
