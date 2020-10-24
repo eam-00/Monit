@@ -283,4 +283,8 @@ check process postgresql with pidfile /var/run/postgresql/12-main.pid
 
 ## -----------------------------------------------
 
+/usr/local/etc/scripts/dataGathering/check_proc_openvpn.sh
+
+## -----------------------------------------------
+
 ## EoF ##
