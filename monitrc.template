@@ -283,6 +283,8 @@ check process postgresql with pidfile /var/run/postgresql/12-main.pid
 
 ## -----------------------------------------------
 
+## See: https://github.com/eam-00/Util-scripts/blob/master/check-proc.sh
+## The idea is to have a way of getting Monit to check a specific process that doesn't write a PID
 check program check_proc_openvpn.sh with path /usr/local/etc/scripts/dataGathering/check_proc_openvpn.sh
 if status != 0 then alert
 
